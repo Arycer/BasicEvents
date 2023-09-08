@@ -2,25 +2,27 @@
   "schemaVersion": 1,
   "id": "basicevents",
   "version": "${version}",
-
   "name": "BasicEvents",
   "description": "",
   "authors": [],
-  "contact": {},
-
+  "contact": {
+    "repo": "https://github.com/Arycer/BasicEvents"
+  },
   "license": "All-Rights-Reserved",
-  "icon": "assets/basicevents/icon.png",
-
   "environment": "server",
-  "entrypoints": {},
-
-      "mixins": [
-        "basicevents.mixins.json"
-      ],
-
+  "entrypoints": {
+    "main": [
+    ],
+    "server": [
+      "me.arycer.basicevents.BasicEvents"
+    ]
+  },
+  "mixins": [
+    "basicevents.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=${loader_version}",
-        "fabric": "*",
+    "fabric": "*",
     "minecraft": "${minecraft_version}"
   }
 }
