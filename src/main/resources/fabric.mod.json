@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "basicevents",
+  "version": "${version}",
+
+  "name": "BasicEvents",
+  "description": "",
+  "authors": [],
+  "contact": {},
+
+  "license": "All-Rights-Reserved",
+  "icon": "assets/basicevents/icon.png",
+
+  "environment": "server",
+  "entrypoints": {},
+
+      "mixins": [
+        "basicevents.mixins.json"
+      ],
+
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+        "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
