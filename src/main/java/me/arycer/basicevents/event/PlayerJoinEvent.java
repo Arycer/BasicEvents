@@ -1,6 +1,5 @@
 package me.arycer.basicevents.event;
 
-import me.arycer.basicevents.BasicEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.HashMap;
@@ -13,8 +12,6 @@ public class PlayerJoinEvent {
 
     public static void register(Boolean runsOnMainThread, JoinEventListener listener) {
         listeners.put(listener, runsOnMainThread);
-
-        BasicEvents.getInstance().getLogger().info("Registered new PlayerJoinEvent listener: " + listener.getClass().getName());
     }
 
     public static void run(ServerPlayerEntity player) {

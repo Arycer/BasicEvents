@@ -1,19 +1,25 @@
 package me.arycer.basicevents.mixin;
 
 import me.arycer.basicevents.BasicEvents;
-import me.arycer.basicevents.event.PlayerJoinEvent;
-import me.arycer.basicevents.event.PlayerLeaveEvent;
-import me.arycer.basicevents.event.PlayerMoveEvent;
+import me.arycer.basicevents.event.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.network.packet.s2c.play.PositionFlag;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Set;
 
 @Mixin(ServerPlayerEntity.class)
-public class MixinPlayerEntity {
+public abstract class MixinPlayerEntity {
     @Unique
     private final ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
 
@@ -23,6 +29,8 @@ public class MixinPlayerEntity {
         if (!connectedPlayers.contains(player)) {
             connectedPlayers.add(player);
             PlayerJoinEvent.run(player);
+        } else {
+            PlayerRespawnEvent.run(player);
         }
     }
 
@@ -43,5 +51,21 @@ public class MixinPlayerEntity {
             PlayerMoveEvent.run(player, lastPos);
             lastPos = player.getPos();
         }
+    }
+
+    @Inject(method = "onDeath", at = @At("RETURN"))
+    private void onPlayerDeath(DamageSource damageSource, CallbackInfo ci) {
+        PlayerDeathEvent.run(player, damageSource);
+        lastPos = null;
+    }
+
+    @Inject(method = "teleport(Lnet/minecraft/server/world/ServerWorld;DDDLjava/util/Set;FF)Z", at = @At("RETURN"))
+    private void onPlayerTeleport(ServerWorld world, double destX, double destY, double destZ, Set<PositionFlag> flags, float yaw, float pitch, CallbackInfoReturnable<Boolean> cir) {
+        PlayerTeleportEvent.run(player, new Vec3d(destX, destY, destZ), new Vec2f(yaw, pitch));
+    }
+
+    @Inject(method = "attack", at = @At("HEAD"))
+    private void onPlayerAttack(Entity target, CallbackInfo ci) {
+        PlayerAttackEvent.run(player, target);
     }
 }

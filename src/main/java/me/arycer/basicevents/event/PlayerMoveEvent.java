@@ -1,6 +1,5 @@
 package me.arycer.basicevents.event;
 
-import me.arycer.basicevents.BasicEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
 
@@ -14,8 +13,6 @@ public class PlayerMoveEvent {
 
     public static void register(Boolean runsOnMainThread, MoveEventListener listener) {
         listeners.put(listener, runsOnMainThread);
-
-        BasicEvents.getInstance().getLogger().info("Registered new PlayerMoveEvent listener: " + listener.getClass().getName());
     }
 
     public static void run(ServerPlayerEntity player, Vec3d lastPos) {

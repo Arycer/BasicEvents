@@ -4,13 +4,13 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.HashMap;
 
-public class PlayerLeaveEvent {
-    private static final HashMap<LeaveEventListener, Boolean> listeners = new HashMap<>();
-    public static void register(LeaveEventListener listener) {
+public class PlayerRespawnEvent {
+    private static final HashMap<RespawnEventListener, Boolean> listeners = new HashMap<>();
+    public static void register(RespawnEventListener listener) {
         register(true, listener);
     }
 
-    public static void register(Boolean runsOnMainThread, LeaveEventListener listener) {
+    public static void register(Boolean runsOnMainThread, RespawnEventListener listener) {
         listeners.put(listener, runsOnMainThread);
     }
 
@@ -24,7 +24,7 @@ public class PlayerLeaveEvent {
         });
     }
 
-    public interface LeaveEventListener {
+    public interface RespawnEventListener {
         void onPlayerEvent(ServerPlayerEntity player);
     }
 }

@@ -1,13 +1,11 @@
 package me.arycer.basicevents;
 
 import lombok.Getter;
-import me.arycer.basicevents.event.PlayerJoinEvent;
-import me.arycer.basicevents.event.PlayerLeaveEvent;
-import me.arycer.basicevents.event.PlayerMoveEvent;
+import me.arycer.basicevents.event.*;
+import me.arycer.basicevents.util.TextUtil;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,15 +27,28 @@ public class BasicEvents implements DedicatedServerModInitializer {
         INSTANCE = this;
 
         PlayerJoinEvent.register(player -> {
-            player.sendMessage(Text.of(String.format("Welcome to the server, %s!", player.getName().getString())), false);
+            Text welcome = TextUtil.parseText(String.format("&l&aWelcome &r&7to the server, &a&l%s&7!", player.getName().getString()));
+            player.sendMessage(welcome, false);
         });
 
-        PlayerLeaveEvent.register(player -> {
-            logger.info(String.format("%s left the server!", player.getName().getString()));
+        PlayerItemUseEvent.register((player, item, hand) -> {
+            Text itemUse = TextUtil.parseText(String.format("&l&7%s &r&7used &l&7%s&7!", player.getName().getString(), item.getName().getString()));
+            player.sendMessage(itemUse, false);
         });
 
-        PlayerMoveEvent.register((player, lastPos) -> {
-            logger.info(String.format("%s moved from %s to %s", player.getName().getString(), lastPos, player.getPos()));
+        PlayerItemUseOnEntityEvent.register((player, target, item, hand) -> {
+            Text itemUse = TextUtil.parseText(String.format("&l&7%s &r&7used &l&7%s &r&7on &l&7%s&7!", player.getName().getString(), item.getName().getString(), target.getName().getString()));
+            player.sendMessage(itemUse, false);
+        });
+
+        PlayerAttackEvent.register((player, target) -> {
+            Text attack = TextUtil.parseText(String.format("&l&7%s &r&7attacked &l&7%s&7!", player.getName().getString(), target.getName().getString()));
+            player.sendMessage(attack, false);
+        });
+
+        PlayerItemUseOnBlockEvent.register((player, item, context, hand) -> {
+            Text itemUse = TextUtil.parseText(String.format("&l&7%s &r&7used &l&7%s &r&7on &l&7%s&7!", player.getName().getString(), item.getName().getString(), context.getBlockPos().toString()));
+            player.sendMessage(itemUse, false);
         });
     }
 
